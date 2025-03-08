@@ -1,10 +1,13 @@
+// @ts-ignore
+
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { Provider } from 'react-redux';
 
-import counterReducer from './features/favoriteIdsSlice.ts';
-import { api } from './services/api';
+import counterReducer from './features/favoriteIdsSlice';
+import React from 'react';
+import { api } from '@/services/api';
 
 const rootReducer = combineReducers({
   favorites: counterReducer,
@@ -21,7 +24,10 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat(api.middleware),
+    // @ts-expect-error rtk middleware type detection
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(api.middleware),
 });
 
 export const persistor = persistStore(store);

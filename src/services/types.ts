@@ -4,3 +4,6 @@ export interface IUser {
   avatar: string;
   createdAt: string;
 }
+export interface IFavorite extends IUser {
+  userId: string;
+}

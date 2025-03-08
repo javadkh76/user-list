@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { IUser } from './types.ts';
+import { IFavorite, IUser } from './types';
 
 export const api = createApi({
   reducerPath: 'api',
@@ -12,21 +12,34 @@ export const api = createApi({
         url: 'users',
         params: name ? { name } : {},
       }),
+      keepUnusedDataFor: 0,
     }),
-    getFavoriteUsers: builder.query<IUser[], string | void>({
+    getFavoriteUsers: builder.query<IFavorite[], string | void>({
       query: (name) => ({
         url: 'faivorites',
         params: name ? { name } : {},
       }),
+      keepUnusedDataFor: 0,
     }),
-    addFavoriteUser: builder.mutation<IUser, Omit<IUser, 'id' | 'createdAt'>>({
+    addFavoriteUser: builder.mutation<IFavorite, Omit<IFavorite, 'id' | 'createdAt'>>({
       query: (user) => ({
         url: 'faivorites',
         method: 'POST',
         body: user,
       }),
     }),
+    removeFavoriteUser: builder.mutation<void, string>({
+      query: (userId) => ({
+        url: `faivorites/${userId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
-export const { useGetUsersQuery, useGetFavoriteUsersQuery, useAddFavoriteUserMutation } = api;
+export const {
+  useGetUsersQuery,
+  useGetFavoriteUsersQuery,
+  useAddFavoriteUserMutation,
+  useRemoveFavoriteUserMutation,
+} = api;
